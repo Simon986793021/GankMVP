@@ -44,9 +44,6 @@ abstract class BaseFragment<V, T : BasePresenter<V>> : Fragment() {
 
 
     fun setRefresh(requestDataRefresh: Boolean) {
-        if (mRefreshLayout == null) {
-            return
-        }
         if (!requestDataRefresh) {
             mRefreshLayout.postDelayed({
                 if (mRefreshLayout != null) {

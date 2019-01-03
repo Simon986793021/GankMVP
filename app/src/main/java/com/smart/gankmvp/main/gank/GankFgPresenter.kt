@@ -69,12 +69,13 @@ class GankFgPresenter(val context: Context) : BasePresenter<IGankView>() {
             } else {
                 list!!.addAll(meiZhiList)
             }
-            gankListAdapter.notifyDataSetChanged()
+            gankListAdapter.addData(list!!)
+           // gankListAdapter.notifyDataSetChanged()
         } else {
             list = meiZhiList
             gankListAdapter = GankListAdapter(context)
             recyclerView.adapter = gankListAdapter
-            gankListAdapter.notifyDataSetChanged()
+            gankListAdapter.setNewData(list)
         }
         gankFgView.setDataRefresh(false)
     }
@@ -126,7 +127,7 @@ class GankFgPresenter(val context: Context) : BasePresenter<IGankView>() {
         var videoDesc = ""
         for (i in results.indices) {
             val video = results[i]
-            if (video.publishedAt == null) video.publishedAt = (video.createdAt)
+            video.publishedAt = (video.createdAt)
             if (com.smart.gankmvp.Utils.DateUtils.isSameDate(publishedAt, video.publishedAt)) {
                 videoDesc = video.desc
                 break

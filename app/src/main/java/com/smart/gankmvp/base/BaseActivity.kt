@@ -12,7 +12,7 @@ import com.smart.gankmvp.R
 
 abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
 
-    protected var mPresenter: T? = null
+    private var mPresenter: T? = null
     protected var mAppBar: AppBarLayout? = null
     protected var mToolbar: Toolbar? = null
     private var mRefreshLayout: SwipeRefreshLayout? = null
@@ -22,7 +22,7 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
      *
      * @return false
      */
-    val isSetRefresh: Boolean?
+    private val isSetRefresh: Boolean?
         get() = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +76,7 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
         }
         if (!requestDataRefresh) {
             mRefreshLayout!!.postDelayed({
-                if (mRefreshLayout != null) {
-                    mRefreshLayout!!.isRefreshing = false
-                }
+                mRefreshLayout?.isRefreshing = false
             }, 1000)
         } else {
             mRefreshLayout!!.isRefreshing = true
@@ -87,9 +85,7 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (mPresenter != null) {
-            mPresenter!!.detachView()
-        }
+        mPresenter?.detachView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

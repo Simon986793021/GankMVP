@@ -15,12 +15,12 @@ open class ViewPagerFgAdapter(
 
     override fun getItem(position: Int): Fragment {
 
-        return fragmentList!![position]
+        return fragmentList[position]
     }
 
 
     override fun getCount(): Int {
-        return fragmentList?.size ?: 0
+        return fragmentList.size
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -30,8 +30,8 @@ open class ViewPagerFgAdapter(
     override fun getPageTitle(position: Int): CharSequence? {
         if (tag == "main_view_pager") {
             when (position) {
-                0 -> return "知乎"
-                1 -> return "干货"
+                0 -> return "干货"
+                1 -> return "知乎"
                 2 -> return "满足你的好奇心"
             }
         }

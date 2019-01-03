@@ -1,5 +1,6 @@
 package com.smart.gankmvp.http
 
+import com.smart.gankmvp.http.ApiConstant.DAILY_BASE_URL
 import com.smart.gankmvp.http.ApiConstant.GANK_BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,8 +13,8 @@ object Api {
 
 //    private var zhihuApiSingleton: ZhihuApi? = null
     private var gankApiSingleton: GankApi? = null
-//    private var dailyApiSingleton: DailyApi? = null
-
+    private var dailyApiSingleton: DailyApi? = null
+    private val client = OkHttpClient.Builder()
     //return Singleton
 //    fun getZhihuApiSingleton(): ZhihuApi {
 //        if (zhihuApiSingleton == null) {
@@ -33,7 +34,7 @@ object Api {
 //    }
 
     fun getGankApiSingleton(): GankApi? {
-        val client = OkHttpClient.Builder()
+
         if (gankApiSingleton == null) {
             synchronized(GankApi::class.java) {
                 if (gankApiSingleton == null) {
@@ -50,20 +51,20 @@ object Api {
         return this.gankApiSingleton
     }
 
-//    fun getDailyApiSingleton(): DailyApi {
-//        if (dailyApiSingleton == null) {
-//            synchronized(DailyApi::class.java) {
-//                if (dailyApiSingleton == null) {
-//                    val retrofit_daily = Retrofit.Builder()
-//                        .baseUrl(DAILY_BASE_URL)
-//                        .client(OkHttpManager.getInstance())
-//                        .addConverterFactory(GsonConverterFactory.create())
-//                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//                        .build()
-//                    dailyApiSingleton = retrofit_daily.create(DailyApi::class.java!!)
-//                }
-//            }
-//        }
-//        return dailyApiSingleton
-//    }
+    fun getDailyApiSingleton(): DailyApi? {
+        if (dailyApiSingleton == null) {
+            synchronized(DailyApi::class.java) {
+                if (dailyApiSingleton == null) {
+                    val retrofit_daily = Retrofit.Builder()
+                        .baseUrl(DAILY_BASE_URL)
+                        .client(client.build())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        .build()
+                    dailyApiSingleton = retrofit_daily.create(DailyApi::class.java)
+                }
+            }
+        }
+        return dailyApiSingleton
+    }
 }
