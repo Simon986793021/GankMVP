@@ -1,22 +1,29 @@
 package com.smart.gankmvp.main.gank
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
+import android.support.v7.widget.CardView
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.chad.library.adapter.base.BaseViewHolder
+import com.smart.gankmvp.R
+import com.smart.gankmvp.base.BaseRecyclerViewAdapter
 
-class GankListAdapter(mContext: Context, mList: List<GankBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class GankListAdapter(val context: Context) : BaseRecyclerViewAdapter<GankBean,GankListAdapter.GankMeiZhiViewHolder>(R.layout.item_gank_meizi){
+    override fun convert(helper: GankMeiZhiViewHolder?, item: GankBean?) {
+        if (helper != null) {
+            helper.titleTextView.text = item!!.desc
+            Glide.with(context).load(item.url).into(helper.meiziIv)
+        }
     }
 
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    inner class GankMeiZhiViewHolder(itemView:View) :BaseViewHolder(itemView){
+        val cardView: CardView =itemView.findViewById(R.id.card_meizhi)
+        val meiziIv:ImageView=itemView.findViewById(R.id.iv_meizhi)
+        val titleTextView:TextView=itemView.findViewById(R.id.tv_meizhi_title)
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 
 }

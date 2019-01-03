@@ -1,13 +1,10 @@
-package com.smartcentury.kcwork.http
+package com.smart.gankmvp.http
 
 import android.util.Log
-import com.smartcentury.kcwork.BuildConfig
 import okhttp3.logging.HttpLoggingInterceptor
 
 class LogInterceptor : HttpLoggingInterceptor.Logger {
     override fun log(message: String) {
-        if (BuildConfig.DEBUG)
-            v("----->", message)
     }
 
     fun v(tag: String, msg: String) {  //信息太长,分段打印

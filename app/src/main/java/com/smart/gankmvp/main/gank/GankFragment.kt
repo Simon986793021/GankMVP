@@ -6,15 +6,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.smart.gankmvp.R
 import com.smart.gankmvp.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_gank.*
 
-class GankFragment : BaseFragment<IGankView, GankFgPresenter>(),IGankView{
+class GankFragment : BaseFragment<IGankView, GankFgPresenter>(), IGankView {
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
+    private lateinit var recyclerView: RecyclerView
+
+
     override fun initView(view: View) {
-        gridLayoutManager= GridLayoutManager(context,2)
-        content_list.layoutManager=gridLayoutManager
+        gridLayoutManager = GridLayoutManager(context, 2)
+        recyclerView = view.findViewById(R.id.content_list)
+        recyclerView.layoutManager=gridLayoutManager
     }
 
     override fun createPresenter(): GankFgPresenter {
@@ -32,16 +35,22 @@ class GankFragment : BaseFragment<IGankView, GankFgPresenter>(),IGankView{
         mPresenter.scrollRecycleView()
     }
 
+    override fun requestDataRefresh() {
+        super.requestDataRefresh()
+        setDataRefresh(true)
+        mPresenter.getGankData()
+    }
+
     override fun setDataRefresh(refresh: Boolean?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        setRefresh(refresh!!)
     }
 
     override fun getLayoutManager(): GridLayoutManager {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return gridLayoutManager
     }
 
     override fun getRecyclerView(): RecyclerView {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return recyclerView
     }
 
 }

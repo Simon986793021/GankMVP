@@ -4,23 +4,23 @@ import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.widget.Toast
-import com.smart.gankmvp.R
 import com.smart.gankmvp.base.BasePresenter
-import com.smartcentury.kcwork.http.Api
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.smart.gankmvp.http.Api
 import rx.Observable
-import rx.functions.Action1
+import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Func2
 import rx.schedulers.Schedulers
 import java.util.*
+import kotlin.collections.ArrayList
 
-class GankFgPresenter(context: Context) : BasePresenter<IGankView>() {
+class GankFgPresenter(val context: Context) : BasePresenter<IGankView>() {
     private lateinit var iGankView: IGankView
     private lateinit var recyclerview: RecyclerView
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var gankListAdapter: GankListAdapter
-    private var list: MutableList<GankBean>? = null
+    private var list: ArrayList<GankBean>? = null
     private var page = 1
     private var lastVisibleItem: Int = 0
     private var isLoadMore = false // 是否加载过更多
@@ -28,7 +28,7 @@ class GankFgPresenter(context: Context) : BasePresenter<IGankView>() {
 
 
     fun getGankData() {
-        iGankView = this!!.getView()!!
+        iGankView = this.getView()!!
         if (iGankView != null) {
             recyclerview = iGankView.getRecyclerView()
             gridLayoutManager = iGankView.getLayoutManager()
@@ -37,62 +37,61 @@ class GankFgPresenter(context: Context) : BasePresenter<IGankView>() {
                 page = page + 1
             }
 
-            io.reactivex.Observable.zip(
-                Api.apiServer.getMeizhiData(page),
-                Api.apiServer.getVideoData(page),
-                Func2<T1, T2, R> { meizhi, video -> this.creatDesc(meizhi, video) }
-        }
-            )
+            Observable.zip(
+                Api.getGankApiSingleton()!!.getMeizhiData(page),
+                Api.getGankApiSingleton()!!.getVideoData(page)
+            ) { meizhi, video -> this.creatDesc(meizhi as MeiZiBean, video as VideoBean) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { meizhi1 -> displayMeizhi(context  , meizhi1.getResults(), iGankView, recyclerview) },
-                    Action1<Throwable> { this.loadError(it) })
+                    { meizhi1 -> displayMeizhi(context, meizhi1.results, iGankView, recyclerview) },
+                    { this.loadError(it) })
         }
     }
 
     private fun loadError(throwable: Throwable) {
         throwable.printStackTrace()
-        IGankView.setDataRefresh(false)
-        Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
+        iGankView.setDataRefresh(false)
+        Toast.makeText(context, "请检查网络", Toast.LENGTH_SHORT).show()
     }
 
     private fun displayMeizhi(
         context: Context,
-        meiZhiList: List<Gank>?,
-        gankFgView: IGankFgView,
+        meiZhiList: ArrayList<GankBean>?,
+        gankFgView: IGankView,
         recyclerView: RecyclerView
     ) {
+        Log.i("SIMON",meiZhiList?.toString())
         if (isLoadMore) {
             if (meiZhiList == null) {
                 gankFgView.setDataRefresh(false)
                 return
             } else {
-                list.addAll(meiZhiList)
+                list!!.addAll(meiZhiList)
             }
-            adapter.notifyDataSetChanged()
+            gankListAdapter.notifyDataSetChanged()
         } else {
             list = meiZhiList
-            adapter = GankListAdapter(context, list)
-            recyclerView.adapter = adapter
-            adapter.notifyDataSetChanged()
+            gankListAdapter = GankListAdapter(context)
+            recyclerView.adapter = gankListAdapter
+            gankListAdapter.notifyDataSetChanged()
         }
         gankFgView.setDataRefresh(false)
     }
 
     fun scrollRecycleView() {
-        mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    lastVisibleItem = layoutManager
+                    lastVisibleItem = gridLayoutManager
                         .findLastVisibleItemPosition()
-                    if (layoutManager.getItemCount() == 1) {
+                    if (gridLayoutManager.getItemCount() == 1) {
                         return
                     }
-                    if (lastVisibleItem + 1 == layoutManager
+                    if (lastVisibleItem + 1 == gridLayoutManager
                             .getItemCount()
                     ) {
-                        gankFgView.setDataRefresh(true)
+                        iGankView.setDataRefresh(true)
                         isLoadMore = true
                         mHandler.postDelayed({ getGankData() }, 1000)
                     }
@@ -101,7 +100,7 @@ class GankFgPresenter(context: Context) : BasePresenter<IGankView>() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition()
             }
         })
     }
@@ -123,13 +122,13 @@ class GankFgPresenter(context: Context) : BasePresenter<IGankView>() {
     }
 
     //匹配同一天的福利描述和视频描述
-    private fun getVideoDesc(publishedAt: Date, results: List<Gank>): String {
+    private fun getVideoDesc(publishedAt: Date, results: List<GankBean>): String {
         var videoDesc = ""
         for (i in results.indices) {
             val video = results[i]
-            if (video.getPublishedAt() == null) video.setPublishedAt(video.getCreatedAt())
-            if (DateUtils.isSameDate(publishedAt, video.getPublishedAt())) {
-                videoDesc = video.getDesc()
+            if (video.publishedAt == null) video.publishedAt = (video.createdAt)
+            if (com.smart.gankmvp.Utils.DateUtils.isSameDate(publishedAt, video.publishedAt)) {
+                videoDesc = video.desc
                 break
             }
         }

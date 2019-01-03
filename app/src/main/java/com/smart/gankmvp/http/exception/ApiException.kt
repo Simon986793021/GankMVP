@@ -1,6 +1,5 @@
 package com.smartcentury.kcwork.http.exception
 
-import com.smartcentury.kcwork.http.result.StatusResult
 
 /**
  * 网络请求异常处理
@@ -26,7 +25,7 @@ class ApiException : RuntimeException {
          * @return   文字提示
          */
         private fun getErrorDesc(code: Int): String {
-            return StatusResult.judgeStatus(code).desc
+            return ""
         }
     }
 }

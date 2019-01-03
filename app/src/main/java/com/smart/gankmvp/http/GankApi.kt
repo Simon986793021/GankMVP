@@ -2,11 +2,12 @@ package com.smart.gankmvp.http
 
 import com.smart.gankmvp.main.gank.GankDataBean
 import com.smart.gankmvp.main.gank.MeiZiBean
-import io.reactivex.Observable
+import com.smart.gankmvp.main.gank.VideoBean
 import retrofit2.http.GET
 import retrofit2.http.Path
+import rx.Observable
 
-interface ApiServer {
+interface GankApi {
 
     @GET("data/福利/10/{page}")
     abstract fun getMeizhiData(@Path("page") page: Int): Observable<MeiZiBean>

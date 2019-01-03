@@ -42,8 +42,23 @@ abstract class BaseFragment<V, T : BasePresenter<V>> : Fragment() {
         }
     }
 
-    private fun requestDataRefresh() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    fun setRefresh(requestDataRefresh: Boolean) {
+        if (mRefreshLayout == null) {
+            return
+        }
+        if (!requestDataRefresh) {
+            mRefreshLayout.postDelayed({
+                if (mRefreshLayout != null) {
+                    mRefreshLayout.isRefreshing = false
+                }
+            }, 1000)
+        } else {
+            mRefreshLayout.isRefreshing = true
+        }
+    }
+
+    open fun requestDataRefresh() {
     }
 
 
