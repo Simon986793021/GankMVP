@@ -22,9 +22,10 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
      *
      * @return false
      */
-    private val isSetRefresh: Boolean?
-        get() = false
 
+    fun isSetRefresh(): Boolean? {
+        return false
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //允许为空，不是所有都要实现MVP模式
@@ -34,20 +35,20 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
         }
         setContentView(provideContentViewId())//布局
 
-//        mAppBar = findViewById(R.id.app_bar_layout)
-//        mToolbar = findViewById(R.id.toolbar)
-//        if (mToolbar != null && mAppBar != null) {
-//            setSupportActionBar(mToolbar) //把Toolbar当做ActionBar给设置
-//            if (canBack()) {
-//                val actionBar = supportActionBar
-//                actionBar?.setDisplayHomeAsUpEnabled(true)//设置ActionBar一个返回箭头，主界面没有，次级界面有
-//            }
-//            if (Build.VERSION.SDK_INT >= 21) {
-//                mAppBar!!.setElevation(10.6f)//Z轴浮动
-//            }
-//        }
+        mAppBar = findViewById(R.id.app_bar_layout)
+        mToolbar = findViewById(R.id.toolbar)
+        if (mToolbar != null && mAppBar != null) {
+            setSupportActionBar(mToolbar) //把Toolbar当做ActionBar给设置
+            if (canBack()) {
+                val actionBar = supportActionBar
+                actionBar?.setDisplayHomeAsUpEnabled(true)//设置ActionBar一个返回箭头，主界面没有，次级界面有
+            }
+            if (Build.VERSION.SDK_INT >= 21) {
+                mAppBar!!.setElevation(10.6f)//Z轴浮动
+            }
+        }
 
-        if (isSetRefresh!!) {
+        if (this.isSetRefresh()!!) {
             setupSwipeRefresh()
         }
     }

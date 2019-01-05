@@ -13,7 +13,6 @@ class GankFragment : BaseFragment<IGankView, GankFgPresenter>(), IGankView {
 
     private lateinit var recyclerView: RecyclerView
 
-
     override fun initView(view: View) {
         gridLayoutManager = GridLayoutManager(context, 2)
         recyclerView = view.findViewById(R.id.content_list)

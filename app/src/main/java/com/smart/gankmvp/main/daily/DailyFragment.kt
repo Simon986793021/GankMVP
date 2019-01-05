@@ -16,7 +16,7 @@ class DailyFragment : BaseFragment<IDailyView, DailyFgPresenter>(), IDailyView {
     }
 
     override fun createPresenter(): DailyFgPresenter {
-        return DailyFgPresenter()
+        return DailyFgPresenter(this.context!!)
     }
 
     override fun createViewLayoutId(): Int {
@@ -25,7 +25,9 @@ class DailyFragment : BaseFragment<IDailyView, DailyFgPresenter>(), IDailyView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setDataRefresh(true)
         mPresenter.getDailyTimeLine("0")
+        mPresenter.scrollRecycleView()
     }
 
     override fun requestDataRefresh() {

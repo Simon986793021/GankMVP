@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
-import com.smart.gankmvp.main.gank.GankFragment
 
 open class ViewPagerFgAdapter(
     supportFragmentManager: FragmentManager,
-    private val fragmentList: Array<GankFragment>,
+    private val fragmentList: Array<Fragment>,
     private val tag: String
 ) :
     FragmentPagerAdapter(supportFragmentManager) {

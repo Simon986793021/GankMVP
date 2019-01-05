@@ -10,7 +10,6 @@ import com.smart.gankmvp.base.BasePresenter
 import com.smart.gankmvp.http.Api
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Func2
 import rx.schedulers.Schedulers
 import java.util.*
 import kotlin.collections.ArrayList
@@ -128,7 +127,7 @@ class GankFgPresenter(val context: Context) : BasePresenter<IGankView>() {
         for (i in results.indices) {
             val video = results[i]
             video.publishedAt = (video.createdAt)
-            if (com.smart.gankmvp.Utils.DateUtils.isSameDate(publishedAt, video.publishedAt)) {
+            if (com.smart.gankmvp.utils.DateUtils.isSameDate(publishedAt, video.publishedAt)) {
                 videoDesc = video.desc
                 break
             }

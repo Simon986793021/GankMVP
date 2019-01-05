@@ -2,10 +2,12 @@ package com.smart.gankmvp.main.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import com.smart.gankmvp.R
 import com.smart.gankmvp.base.BaseActivity
+import com.smart.gankmvp.main.daily.DailyFragment
 import com.smart.gankmvp.main.gank.GankFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +31,7 @@ class MainActivity : BaseActivity<IMainView, MainActivityPresenter>() {
 
     //初始化Tab滑动
     private fun initTabView() {
-        val items = arrayOf(GankFragment())
+        val items:Array<Fragment> = arrayOf(GankFragment(),DailyFragment())
         content_viewPager.adapter = ViewPagerFgAdapter(supportFragmentManager,items,"main_view_pager")
         tabLayout!!.setupWithViewPager(content_viewPager)
 

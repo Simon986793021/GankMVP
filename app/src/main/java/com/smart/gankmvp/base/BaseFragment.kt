@@ -23,7 +23,9 @@ abstract class BaseFragment<V, T : BasePresenter<V>> : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(createViewLayoutId(), container, false)
         initView(view)
-        setupSwipeRefresh(view)
+        if (isSetRefresh()!!) {
+            setupSwipeRefresh(view)
+        }
         return view
     }
 
@@ -62,6 +64,10 @@ abstract class BaseFragment<V, T : BasePresenter<V>> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         mPresenter.detachView()
+    }
+
+    fun isSetRefresh(): Boolean? {
+        return true
     }
 
     protected abstract fun initView(view: View)

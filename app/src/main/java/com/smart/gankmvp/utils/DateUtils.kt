@@ -1,4 +1,4 @@
-package com.smart.gankmvp.Utils
+package com.smart.gankmvp.utils
 
 import java.util.*
 
