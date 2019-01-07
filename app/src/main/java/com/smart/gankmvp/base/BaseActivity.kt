@@ -36,7 +36,7 @@ abstract class BaseActivity<V, T : BasePresenter<V>> : AppCompatActivity() {
         setContentView(provideContentViewId())//布局
 
         mAppBar = findViewById(R.id.app_bar_layout)
-        mToolbar = findViewById(R.id.toolbar)
+        mToolbar = this.findViewById(R.id.toolbar)
         if (mToolbar != null && mAppBar != null) {
             setSupportActionBar(mToolbar) //把Toolbar当做ActionBar给设置
             if (canBack()) {

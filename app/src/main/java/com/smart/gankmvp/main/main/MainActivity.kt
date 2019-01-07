@@ -31,7 +31,7 @@ class MainActivity : BaseActivity<IMainView, MainActivityPresenter>() {
 
     //初始化Tab滑动
     private fun initTabView() {
-        val items:Array<Fragment> = arrayOf(GankFragment(),DailyFragment())
+        val items:Array<Fragment> = arrayOf(GankFragment())
         content_viewPager.adapter = ViewPagerFgAdapter(supportFragmentManager,items,"main_view_pager")
         tabLayout!!.setupWithViewPager(content_viewPager)
 
